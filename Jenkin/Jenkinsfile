@@ -8,17 +8,16 @@ pipeline {
                 git 'https://github.com/amirsamak/simple-nodejs-app.git'
             }
         }
-    }
-    
-    stages {
+ 
         stage('ci') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'usrname')]) 
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'usrname')]){ 
                 sh """
                 docker build . -f dockerfile -t amirsamak/nodejsvsjenkins
                 docker login -u ${usrname} -p ${pass}
                 docker push amirsamak/nodejsvsjenkins
                 """
+                }
             }
         }
         
@@ -28,3 +27,4 @@ pipeline {
             }
         }
     }
+}
